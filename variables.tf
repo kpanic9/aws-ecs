@@ -26,3 +26,4 @@ variable "private_subnet_c_ip_range" {
 	description = "private subnet c ip address range"
 }
 
+
