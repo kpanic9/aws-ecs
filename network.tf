@@ -151,3 +151,48 @@ resource "aws_route_table_association" "private_subnet_c_association" {
     subnet_id = "${aws_subnet.private_c.id}"
     route_table_id = "${aws_route_table.private_subnet_rt.id}"
 }
+
+resource "aws_subnet" "secure_a" {
+    vpc_id = "${aws_vpc.vpc.id}"
+    cidr_block = "${var.secure_subnet_a_ip_range}"
+    availability_zone = "ap-southeast-2a"
+
+    tags = {
+        Name = "SecureSubnetA"
+    }
+}
+
+resource "aws_subnet" "secure_b" {
+    vpc_id = "${aws_vpc.vpc.id}"
+    cidr_block = "${var.secure_subnet_b_ip_range}"
+    availability_zone = "ap-southeast-2b"
+
+    tags = {
+        Name = "SecureSubnetB"
+    }
+}
+
+resource "aws_subnet" "secure_c" {
+    vpc_id = "${aws_vpc.vpc.id}"
+    cidr_block = "${var.secure_subnet_c_ip_range}"
+    availability_zone = "ap-southeast-2c"
+
+    tags = {
+        Name = "SecureSubnetC"
+    }
+}
+
+resource "aws_route_table_association" "secure_subnet_a_association" {
+    subnet_id = "${aws_subnet.secure_a.id}"
+    route_table_id = "${aws_route_table.private_subnet_rt.id}"
+}
+
+resource "aws_route_table_association" "secure_subnet_b_association" {
+    subnet_id = "${aws_subnet.secure_b.id}"
+    route_table_id = "${aws_route_table.private_subnet_rt.id}"
+}
+
+resource "aws_route_table_association" "secure_subnet_c_association" {
+    subnet_id = "${aws_subnet.secure_c.id}"
+    route_table_id = "${aws_route_table.private_subnet_rt.id}"
+}

@@ -26,4 +26,14 @@ variable "private_subnet_c_ip_range" {
 	description = "private subnet c ip address range"
 }
 
+variable "secure_subnet_a_ip_range" {
+	description = "Secure subnet a ipaddress range"
+}
 
+variable "secure_subnet_b_ip_range" {
+	description = "Secure subnet b ip address range"
+}
+
+variable "secure_subnet_c_ip_range" {
+	description = "Secure subnet c ip address range"
+}
