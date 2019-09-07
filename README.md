@@ -13,3 +13,10 @@ set values for configs in terraform.tfvars file. This will give some amount of c
 terraform apply
  
 
+## TODO
+
+Use remote backend for storing terraform state (S3)
+Implement RDS
+Use an actual application instead of NGINX
+Implement a deployement strategy to remove the downtime of application deployments
+
