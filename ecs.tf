@@ -31,3 +31,47 @@ resource "aws_iam_instance_profile" "ecs_instance_profile" {
     name = "EcsInstanceProfile"
     role = "${aws_iam_role.ecs_instance_role.name}"
 }
+
+# ecs cluster with auto scaling
+resource "aws_ecs_cluster" "app_cluster" {
+    name = "App-Cluster"
+}
+
+# launching the ecs cluster nodes with auto scaling
+resource "aws_launch_configuration" "ecs_config" {
+    name = "ECSLaunchConfig"
+    image_id = "${var.image_id}"
+    instance_type = "${var.instance_type}"
+
+    iam_instance_profile = "${aws_iam_instance_profile.ecs_instance_profile.name}"
+    key_name = "${var.keyname}"
+    security_groups = ["${aws_security_group.app_sg.id}"]
+
+    associate_public_ip_address = true
+    user_data = <<EOF
+#! /bin/bash
+echo ECS_CLUSTER="App-Cluster" > /etc/ecs/ecs.config
+echo "Stating ECS....."
+/usr/libexec/amazon-ecs-init pre-start
+/usr/libexec/amazon-ecs-init start
+echo "Started ECS"
+EOF
+}
+
+resource "aws_autoscaling_group" "ecs_asg" {
+    name = "EcsASG"
+    max_size = "${var.maximum_nodes}"
+    min_size = "${var.minimum_nodes}"
+    desired_capacity = "${var.desired_nodes}"
+
+    health_check_type = "EC2"
+
+    launch_configuration = "${aws_launch_configuration.ecs_config.name}"
+    vpc_zone_identifier = ["${aws_subnet.private_a.id}", "${aws_subnet.private_b.id}", "${aws_subnet.private_c.id}"]
+
+    tag {
+        key = "Name"
+        value = "EcsNode"
+        propagate_at_launch = true
+    }
+}
