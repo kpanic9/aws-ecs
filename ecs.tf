@@ -75,3 +75,29 @@ resource "aws_autoscaling_group" "ecs_asg" {
         propagate_at_launch = true
     }
 }
+
+# ecs cluster node scaling policies
+resource "aws_autoscaling_policy" "ecs_scale_up" {
+    name = "ScaleUpPolicy"
+    autoscaling_group_name = "${aws_autoscaling_group.ecs_asg.name}"
+    adjustment_type = "ChangeInCapacity"
+    scaling_adjustment = "1"
+    cooldown = "300"
+    policy_type = "SimpleScaling"
+}
+
+resource "aws_cloudwatch_metric_alarm" "ecs_scaleup_alarm" {
+    alarm_name = "EcsScaleUpAlarm"
+    comparison_operator = "GreaterThanOrEqualToThreshold"
+    evaluation_periods = "2"
+    metric_name = "CPUUtilization"
+    namespace = "AWS/EC2"
+    period = "120"
+    statistic = "Average"
+    threshold = "75"
+    dimensions = {
+        "AutoScalingGroupName" = "${aws_autoscaling_group.ecs_asg.name}"
+    }
+    actions_enabled = true
+    alarm_actions = ["${aws_autoscaling_policy.ecs_scale_up.arn}"]
+}
