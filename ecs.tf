@@ -126,3 +126,15 @@ resource "aws_cloudwatch_metric_alarm" "ecs_scaledown_alarm" {
     actions_enabled = true
     alarm_actions = ["${aws_autoscaling_policy.ecs_scale_down.arn}"]
 }
+
+# ecs container resources
+resource "aws_ecs_task_definition" "task_definition" {
+    family = "TaskDef"
+    container_definitions = "${file("./task-definition.json")}"
+
+    network_mode = "bridge"
+
+    tags = {
+        Name = "TaskDefinition"
+    }
+}
