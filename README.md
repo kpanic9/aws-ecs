@@ -1,16 +1,18 @@
 # AWS ECS
- 
-Provisioning VPC and three layers of subnets (public, private, secure) with related network infrastructure
-ECS Cluster with auto scaling cluster instance nodes
-Deploy sample application
 
+Terraform module for provisioning an ECS cluster. This module provisions,
+- a VPC and three layers of subnets (public, private, secure) with related network infrastructure
+- an ECS cluster with auto scaling for cluster instances   
+- a bastion host  
 
 ## How to use
  
 ```bash
 git clone repo
 cd aws-ecs/
-set values for configs in terraform.tfvars file. This will give some amount of configuration options
+```
+Set values for configs in terraform.tfvars file. This will give some amount of configuration options
+```bash
 terraform apply
 ```
  
